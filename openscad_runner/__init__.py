@@ -82,7 +82,8 @@ class OpenScadRunner(object):
         customizer_params={},
         hard_warnings=False,
         quiet=False,
-        verbose=False
+        verbose=False,
+        additional_args=None,
     ):
         """
         Initializer method.  Arguments are:
@@ -111,6 +112,7 @@ class OpenScadRunner(object):
         - hard_warnings = Stop at first WARNING, as if it were an ERROR.  Default: False
         - quiet = Suppresses non-error, non-warning messages.  Default: False
         - verbose = Print the command-line to stdout on each execution.  Default: False
+        - additional_args = A list of additional command-line arguments (list of strings) to pass to OpenSCAD. Default: None
         """
         exepath = shutil.which("openscad")
         if exepath is not None:
@@ -158,6 +160,7 @@ class OpenScadRunner(object):
         self.hard_warnings = hard_warnings
         self.quiet = quiet
         self.verbose = verbose
+        self.additional_args = additional_args
 
         self.cmdline = []
         self.script = []
@@ -249,6 +252,8 @@ class OpenScadRunner(object):
             scadcmd.append("--hardwarnings")
         if self.quiet:
             scadcmd.append("--quiet")
+        if self.additional_args is not None:
+            scadcmd.extend(self.additional_args)
         scadcmd.append(self.scriptfile)
         if self.verbose:
             line = " ".join([
